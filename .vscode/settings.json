@@ -1,5 +1,5 @@
 {
-    "workbench.colorTheme": "Monospace Light",
+    "workbench.colorTheme": "Monokai",
     "cmake.showOptionsMovedNotification": false,
     "editor.defaultFormatter": "ms-vscode.cpptools",
     "editor.formatOnPaste": true,
