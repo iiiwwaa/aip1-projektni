@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
+#include <ctype.h>
+#include <string.h>
 
 // najveca dozvoljena velicina ploce
 #define MAX_SIZE 20
@@ -113,7 +115,7 @@ void printPolje()
 {
     printf("\n   ");
     for (int i = 0; i < velicina; i++)
-        printf("%2d ", i);
+        printf(" %2d", i);
     printf("\n   +");
     for (int i = 0; i < velicina; i++)
         printf("---");
@@ -188,7 +190,7 @@ bool provjeri()
     return (otkSafe == 0);
 }
 
-int main()
+int game()
 {
     srand(time(0));
 
@@ -272,6 +274,42 @@ int main()
                 oznaceno[x][y] = !oznaceno[x][y]; //<------ maknuti zastavicu sa prethodno oznacenog polja
             }
         }
+    }
+    return 0;
+}
+
+int main()
+{
+    int izbor;
+    while (1)
+    {
+        printf("DOBRODOŠLI U PROJEKTNI PREDLOŽAK\n");
+        printf("1. Započni \n2. Upute \n3. Izlaz\n\nUnesite svoj izbor:");
+        scanf("%d", &izbor);
+        if (izbor == 1)
+        {
+            printf("Započeli ste projektni predložak.\n\n");
+            game();
+        }
+        else if (izbor == 2)
+        {
+            printf("Upute za korištenje:\n\n");
+            printf("Kada započnete igru, odabirete veličinu svojeg polja (minimalno 3), zatim odabirete koliko se mina generira u polje.\n");
+            printf("Nakon odabiranja veličina polja i količine mina, vaše polje se generira i ponuđeni ste sa dvije opcije.\n");
+            printf("Opcija 1 je otkrivanje polja, opcija 2 je postavljanje zastavice na polje.\n");
+            printf("Kada odaberete jednu od opcija, morate upisati koordinatu na kojoj želite obaviti tu opciju (npr. 2(redak) 3(stupac)).\n");
+            printf("Sretno!");
+        }
+        else if (izbor == 3)
+        {
+            printf("Izlaz iz programa.\n");
+            break;
+        }
+        else
+        {
+            printf("Nepoznat izbor, pokušajte ponovno.\n");
+        }
+        printf("\n\n");
     }
     return 0;
 }
