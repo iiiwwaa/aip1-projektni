@@ -23,10 +23,10 @@ int velicina; // igrac podesava velicinu po volji
 int mine;     // igrac podesava broj mina po volji
 
 char polje[MAX_SIZE][MAX_SIZE];
-bool otkriveno[MAX_SIZE][MAX_SIZE];
-bool oznaceno[MAX_SIZE][MAX_SIZE];
-bool gameover = false;
-bool gamewon = false;
+int otkriveno[MAX_SIZE][MAX_SIZE];
+int oznaceno[MAX_SIZE][MAX_SIZE];
+int gameover = 0;
+int gamewon = 0;
 
 // postavljanje ploce
 void intPloca()
@@ -36,8 +36,8 @@ void intPloca()
         for (int j = 0; j < velicina; j++)
         {
             polje[i][j] = '0';
-            otkriveno[i][j] = false;
-            oznaceno[i][j] = false;
+            otkriveno[i][j] = 0;
+            oznaceno[i][j] = 0;
         }
     }
 }
@@ -130,11 +130,11 @@ void printPolje()
             {
                 printf("💣 "); // <-------------- ispisuje emotikon mine ako je igrac izgubio
             }
-            else if (oznaceno[i][j])
+            else if (oznaceno[i][j] == 1)
             {
                 printf("🚩 "); // <-------------- ispisuje emotikon zastave ako je igrac oznacio polje
             }
-            else if (!otkriveno[i][j])
+            else if (!otkriveno[i][j] == 1)
             {
                 printf("⬛ "); // <-------------- ispisuje emotikon kocke ako igrac nije otvorio polje
             }
@@ -158,12 +158,12 @@ void printPolje()
 // otvaranje polja (i otvaranje praznih polja u blizini)
 void otkri(int x, int y)
 {
-    if (x < 0 || x >= velicina || y < 0 || y >= velicina || otkriveno[x][y] || oznaceno[x][y])
+    if (x < 0 || x >= velicina || y < 0 || y >= velicina || otkriveno[x][y] == 1 || oznaceno[x][y] == 1)
         return;
-    otkriveno[x][y] = true;
+    otkriveno[x][y] = 1;
     if (polje[x][y] == '*')
     {
-        gameover = true;
+        gameover = 1;
         return;
     }
     if (polje[x][y] == '0')
@@ -176,14 +176,14 @@ void otkri(int x, int y)
 }
 
 // provjeravanje dali je igrac pobijedio
-bool provjeri()
+int provjeri()
 {
     int otkSafe = 0;
     for (int i = 0; i < velicina; i++)
     {
         for (int j = 0; j < velicina; j++)
         {
-            if (!otkriveno[i][j] && polje[i][j] != '*')
+            if (!otkriveno[i][j] == 1 && polje[i][j] != '*')
                 otkSafe++;
         }
     }
@@ -192,6 +192,7 @@ bool provjeri()
 
 int game()
 {
+    int brKoraka = 0;
     srand(time(0));
 
     // igrac unosi zeljenu velicinu polja
@@ -241,7 +242,7 @@ int game()
         }
         if (odabir == 1)
         {
-            if (oznaceno[x][y])
+            if (oznaceno[x][y] == 1)
             {
                 printf("Polje je oznaceno!");
             }
@@ -252,20 +253,25 @@ int game()
                 {
                     printPolje();
                     printf("Pogodili ste minu, GAME OVER!\n");
+                    brKoraka++;
+                    printf("Vaš broj koraka je: %d", brKoraka);
                     break;
                 }
                 else if (provjeri())
                 {
-                    gamewon = true;
+                    gamewon = 1;
                     printPolje();
                     printf("Sva sigurna polja su otkrivena, POBIJEDILI STE!\n");
+                    brKoraka++;
+                    printf("Vaš broj koraka je: %d", brKoraka);
                     break;
                 }
             }
+            brKoraka++;
         }
         else if (odabir == 2)
         {
-            if (otkriveno[x][y])
+            if (otkriveno[x][y] == 1)
             {
                 printf("Ne mozete postaviti zastavicu na otkriveno polje!\n");
             }
@@ -273,6 +279,7 @@ int game()
             {
                 oznaceno[x][y] = !oznaceno[x][y]; //<------ maknuti zastavicu sa prethodno oznacenog polja
             }
+            brKoraka++;
         }
     }
     return 0;
@@ -283,7 +290,7 @@ int main()
     int izbor;
     while (1)
     {
-        printf("DOBRODOŠLI U PROJEKTNI PREDLOŽAK\n");
+        printf("DOBRODOŠLI U MINOLOVAC\nAutori projekta: Ivano Fresl, Jan Jaić Krasnik\n\n");
         printf("1. Započni \n2. Upute \n3. Izlaz\n\nUnesite svoj izbor:");
         scanf("%d", &izbor);
         if (izbor == 1)
