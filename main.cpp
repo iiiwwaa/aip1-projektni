@@ -295,6 +295,8 @@ int main()
         scanf("%d", &izbor);
         if (izbor == 1)
         {
+            gameover = 0;
+            gamewon = 0;
             printf("Započeli ste projektni predložak.\n\n");
             game();
         }
