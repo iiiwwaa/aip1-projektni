@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -27,6 +26,7 @@ int otkriveno[MAX_SIZE][MAX_SIZE];
 int oznaceno[MAX_SIZE][MAX_SIZE];
 int gameover = 0;
 int gamewon = 0;
+int prviPokret = 1;
 
 // postavljanje ploce
 void intPloca()
@@ -43,17 +43,18 @@ void intPloca()
 }
 
 // nasumicno postavi mine
-void mjMina()
+void mjMina(int prviX, int prviY)
 {
     int postMine = 0;
     while (postMine < mine)
     {
         int x = rand() % velicina;
         int y = rand() % velicina;
-        if (polje[x][y] != '*')
+        int jeSusjedno = (abs(x - prviX) <= 1 && abs(y - prviY) <= 1);
+        if (polje[x][y] != '*' && !jeSusjedno)
         {
-            polje[x][y] = '*';
-            postMine++;
+                polje[x][y] = '*';
+                postMine++;
         }
     }
 }
@@ -215,8 +216,6 @@ int game()
     }
 
     intPloca();
-    mjMina();
-    calHint();
 
     while (!gameover && !gamewon)
     {
@@ -248,6 +247,11 @@ int game()
             }
             else
             {
+                if(prviPokret){
+                    mjMina(x, y);
+                    calHint();
+                    prviPokret = 0;
+                }
                 otkri(x, y);
                 if (gameover)
                 {
@@ -297,7 +301,7 @@ int main()
         {
             gameover = 0;
             gamewon = 0;
-            printf("Započeli ste projektni predložak.\n\n");
+            printf("Započeli ste Minolovac.\n\n");
             game();
         }
         else if (izbor == 2)
